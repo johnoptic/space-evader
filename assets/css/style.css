@@ -1,0 +1,25 @@
+@font-face {
+    font-family: 'Invader-Title';
+    src: url(../fonts/MachineStd-Medium.otf);
+}
+
+@font-face {
+    font-family: 'Invader-Console';
+    src: url(../fonts/space_invaders.ttf);
+}
+
+body {
+    margin: 0;
+    text-align: center;
+    background-color: rebeccapurple;
+}
+
+h1 {
+    font-family: 'Invader-Title';
+    color: gold;
+    text-shadow: 2px 2px black;
+}
+
+canvas {
+    border: solid 1px black;
+}
