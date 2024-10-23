@@ -61,6 +61,10 @@ const keys = {
     d: { pressed: false },
 };
 
+const SPEED = 0.15;
+const REVERSE_SPEED = 0.05;
+const ROTATIONAL_SPEED = 0.05;
+
 function animate() {
     requestAnimationFrame(animate);
     c.fillStyle = 'black';
@@ -69,17 +73,17 @@ function animate() {
 
     // Acceleration
     if (keys.w.pressed) {
-        player.velocity.x += Math.cos(player.rotation) * 0.15; 
-        player.velocity.y += Math.sin(player.rotation) * 0.15; 
+        player.velocity.x += Math.cos(player.rotation) * SPEED; 
+        player.velocity.y += Math.sin(player.rotation) * SPEED; 
     }
     // Small reverse thrust
     if (keys.s.pressed) {
-        player.velocity.x -= Math.cos(player.rotation) * 0.05; 
-        player.velocity.y -= Math.sin(player.rotation) * 0.05; 
+        player.velocity.x -= Math.cos(player.rotation) * REVERSE_SPEED; 
+        player.velocity.y -= Math.sin(player.rotation) * REVERSE_SPEED; 
     }
     // Rotate
-    if (keys.d.pressed) player.rotation += 0.05;
-    if (keys.a.pressed) player.rotation -= 0.05;
+    if (keys.d.pressed) player.rotation += ROTATIONAL_SPEED;
+    if (keys.a.pressed) player.rotation -= ROTATIONAL_SPEED;
 }
 
 animate();
