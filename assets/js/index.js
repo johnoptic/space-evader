@@ -6,51 +6,60 @@ canvas.height = innerHeight;
 
 class Player {
     constructor() {
-
         this.velocity = {
             x: 0,
             y: 0
-        }
+        };
 
-        const image = new Image()
-        image.src = '../assets/img/player.png'
+        const image = new Image();
+        image.src = '../assets/img/player.png';
         image.onload = () => {
             this.image = image;
             this.width = 100;
             this.height = 100;
+            this.rotation = 0;
             this.position = {
                 x: canvas.width / 2 - this.width / 2,
-                y: canvas.height - this.height - 40
-            }
-        }
+                y: canvas.height / 2 - this.height / 2
+            };
+        };
     }
 
     draw() {
-        //c.fillStyle = 'red'
-        //c.fillRect(this.position.x, this.position.y, this.width, this.height)
-        c.drawImage(this.image, this.position.x, this.position.y, this.width, this.height)     
+        c.save();
+        c.translate(this.position.x, this.position.y);
+        c.rotate(this.rotation);
+        c.drawImage(this.image, -this.width / 2, -this.height / 2, this.width, this.height);
+        c.restore();
     }
 
     update() {
         if (this.image) {
-        this.draw()
-        this.position.x += this.velocity.x
+            this.draw();
+            this.position.x += this.velocity.x;
+            this.position.y += this.velocity.y;
+
+            // Implement friction to x and y velocity
+            this.velocity.x *= 0.999; 
+            this.velocity.y *= 0.999; 
+
+            // Keep player in bounds
+            if (this.position.x < 0) this.position.x = canvas.width;
+            else if (this.position.x > canvas.width) this.position.x = 0;
+
+            if (this.position.y < 0) this.position.y = canvas.height;
+            else if (this.position.y > canvas.height) this.position.y = 0;
         }
     }
 }
 
-const player = new Player()
+const player = new Player();
 const keys = {
-    a: {
-        pressed: false
-    },
-    d: {
-        pressed: false
-    },
-    space: {
-        pressed: false
-    }
-}
+    w: { pressed: false },
+    s: { pressed: false },
+    a: { pressed: false },
+    d: { pressed: false },
+};
 
 function animate() {
     requestAnimationFrame(animate);
@@ -58,45 +67,53 @@ function animate() {
     c.fillRect(0, 0, canvas.width, canvas.height);
     player.update();
 
-    if (keys.a.pressed) {
-        player.velocity.x = -3
-    } else if (keys.d.pressed) {
-        player.velocity.x = 3
-    } else {
-        player.velocity.x = 0
+    // Acceleration
+    if (keys.w.pressed) {
+        player.velocity.x += Math.cos(player.rotation) * 0.15; 
+        player.velocity.y += Math.sin(player.rotation) * 0.15; 
     }
+    // Small reverse thrust
+    if (keys.s.pressed) {
+        player.velocity.x -= Math.cos(player.rotation) * 0.05; 
+        player.velocity.y -= Math.sin(player.rotation) * 0.05; 
+    }
+    // Rotate
+    if (keys.d.pressed) player.rotation += 0.05;
+    if (keys.a.pressed) player.rotation -= 0.05;
 }
 
 animate();
 
 addEventListener('keydown', ({ key }) => {
-    console.log(key)
     switch (key) {
+        case 'w':
+            keys.w.pressed = true;
+            break;
+        case 's':
+            keys.s.pressed = true;
+            break;
         case 'a':
-            console.log('left')
-            keys.a.pressed = true
+            keys.a.pressed = true;
             break;
         case 'd':
-            console.log('right')
-            keys.d.pressed = true
-            break;
-        case ' ':
-            console.log('space')
+            keys.d.pressed = true;
             break;
     }
-})
+});
 
 addEventListener('keyup', ({ key }) => {
-    console.log(key)
     switch (key) {
+        case 'w':
+            keys.w.pressed = false;
+            break;
+        case 's':
+            keys.s.pressed = false;
+            break;
         case 'a':
-            keys.a.pressed = false
+            keys.a.pressed = false;
             break;
         case 'd':
-            keys.d.pressed = false
-            break;
-        case ' ':
-            console.log('space')
+            keys.d.pressed = false;
             break;
     }
-})
+});
