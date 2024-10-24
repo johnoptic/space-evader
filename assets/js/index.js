@@ -39,8 +39,27 @@ class Player {
         c.restore();
     }
 
+    drawGlow() {
+        c.save();
+        c.translate(this.position.x, this.position.y);
+        c.rotate(this.rotation);
+        
+        // Draw the glowing effect if W is pressed
+        if (keys.w.pressed) {
+            c.beginPath();
+            c.arc(-this.width / 2, this.height / 2 - 50, 10, 0, Math.PI * 2); 
+            c.fillStyle = 'rgba(255, 165, 0, 0.5'; // Orange color with some transparency
+            c.fill();
+            c.closePath();
+        }
+
+        c.drawImage(this.image, -this.width / 2, -this.height / 2, this.width, this.height);
+        c.restore();
+    }
+
     update() {
         if (this.image) {
+            this.drawGlow();
             this.draw();
             this.position.x += this.velocity.x;
             this.position.y += this.velocity.y;
