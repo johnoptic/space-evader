@@ -104,8 +104,8 @@ const keys = {
     d: { pressed: false },
 };
 
-const MAX_SPEED = 20;
-const SPEED = 0.15;
+const MAX_SPEED = 6;
+const SPEED = 0.2;
 const REVERSE_SPEED = 0.05;
 const ROTATIONAL_SPEED = 0.05;
 const PROJECTILE_SPEED = 12;
