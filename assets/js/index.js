@@ -49,12 +49,22 @@ class Player {
             this.velocity.x *= 0.999; 
             this.velocity.y *= 0.999; 
 
-            // Keep player in bounds
-            if (this.position.x < 0) this.position.x = canvas.width;
-            else if (this.position.x > canvas.width) this.position.x = 0;
+            // Keep player in bounds and implement bouncing behavior
+            if (this.position.x < 0) {
+                this.position.x = 0;
+                this.velocity.x = -this.velocity.x / 2; // Bounce back and lose half velocity
+            } else if (this.position.x > canvas.width) {
+                this.position.x = canvas.width;
+                this.velocity.x = -this.velocity.x / 2; // Bounce back and lose half velocity
+            }
 
-            if (this.position.y < 0) this.position.y = canvas.height;
-            else if (this.position.y > canvas.height) this.position.y = 0;
+            if (this.position.y < 0) {
+                this.position.y = 0;
+                this.velocity.y = -this.velocity.y / 2; // Bounce back and lose half velocity
+            } else if (this.position.y > canvas.height) {
+                this.position.y = canvas.height;
+                this.velocity.y = -this.velocity.y / 2; // Bounce back and lose half velocity
+            }
         }
     }
 }
