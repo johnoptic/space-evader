@@ -88,6 +88,43 @@ class Player {
     }
 }
 
+// Invader One Class
+class InvaderOne {
+    constructor() {
+
+        this.velocity = {
+            x: 0,
+            y: 0
+        };
+
+        const image = new Image();
+        image.src = '../assets/img/enemy1.png';
+        image.onload = () => {
+            this.image = image;
+            this.width = 100;
+            this.height = 100;
+            this.rotation = 0;
+            this.position = {
+                x: canvas.width / 2 - this.width / 2,
+                y: canvas.height / 2 - this.height / 2
+            };
+        };
+    }
+
+    draw() {
+        c.drawImage(this.image, -this.width / 2, -this.height / 2, this.width, this.height);
+    }
+
+    update() {
+        if (this.image) {
+            this.draw();
+            this.position.x += this.velocity.x;
+            this.position.y += this.velocity.y;
+
+        }
+    }
+}
+
 // Projectile Class
 class Projectile {
     constructor({position, velocity}) {
@@ -121,6 +158,9 @@ class Projectile {
 
 // Instantiate Player Object
 const player = new Player();
+
+//instantiate InvaderOne
+const invader1 = new InvaderOne();
 
 //-------------------------
 // Globals
@@ -222,6 +262,7 @@ function animate() {
     c.fillStyle = 'black';
     c.fillRect(0, 0, canvas.width, canvas.height);
     player.update();
+    invader1.update();
 
     for (let i = projectiles.length - 1; i >= 0; i--) {
         const projectile = projectiles[i]
