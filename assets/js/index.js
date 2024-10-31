@@ -101,18 +101,17 @@ class InvaderOne {
         image.src = '../assets/img/enemy1.png';
         image.onload = () => {
             this.image = image;
-            this.width = 100;
-            this.height = 100;
-            this.rotation = 0;
+            this.width = 60;
+            this.height = 60;
             this.position = {
-                x: canvas.width / 2 - this.width / 2,
-                y: canvas.height / 2 - this.height / 2
+                x: canvas.width / 2, 
+                y: 20
             };
         };
     }
 
     draw() {
-        c.drawImage(this.image, -this.width / 2, -this.height / 2, this.width, this.height);
+        c.drawImage(this.image, this.position.x - this.width / 2, this.position.y );
     }
 
     update() {
@@ -122,6 +121,26 @@ class InvaderOne {
             this.position.y += this.velocity.y;
 
         }
+    }
+}
+
+class Grid {
+    constructor() {
+        this.position = {
+            x: 0,
+            y: 0
+        }
+
+        this.velocity = {
+            x: 0,
+            y: 0
+        }
+
+        this.invaders = [new InvaderOne()]
+    }
+
+    update() {
+
     }
 }
 
@@ -156,15 +175,16 @@ class Projectile {
     }
 }
 
-// Instantiate Player Object
-const player = new Player();
 
-//instantiate InvaderOne
-const invader1 = new InvaderOne();
 
 //-------------------------
 // Globals
 //-------------------------
+
+// Instantiate Player Object
+const player = new Player();
+
+const grids = [new Grid()]
 
 const keys = {
     w: { pressed: false },
@@ -262,7 +282,6 @@ function animate() {
     c.fillStyle = 'black';
     c.fillRect(0, 0, canvas.width, canvas.height);
     player.update();
-    invader1.update();
 
     for (let i = projectiles.length - 1; i >= 0; i--) {
         const projectile = projectiles[i]
@@ -274,6 +293,14 @@ function animate() {
         }
     }
     console.log(projectiles.length)
+
+    grids.forEach(grid => {
+        grid.update();
+        grid.invaders.forEach((invader) => {
+            invader.update()
+        })
+    })
+
     // Acceleration
     if (keys.w.pressed) {
         player.velocity.x += Math.cos(player.rotation) * SPEED; 
