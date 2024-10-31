@@ -98,11 +98,11 @@ class InvaderOne {
         };
 
         const image = new Image();
-        image.src = '../assets/img/enemy1.png';
+        image.src = '../assets/img/invader1.png';
         image.onload = () => {
             this.image = image;
-            this.width = 60;
-            this.height = 60;
+            this.width = 20;
+            this.height = 20;
             this.position = {
                 x: canvas.width / 2, 
                 y: 20
