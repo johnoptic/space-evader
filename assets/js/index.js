@@ -193,11 +193,11 @@ const keys = {
     d: { pressed: false },
 };
 
-const MAX_SPEED = 6;
+const MAX_SPEED = 4;
 const SPEED = 0.2;
 const REVERSE_SPEED = 0.05;
 const ROTATIONAL_SPEED = 0.05;
-const PROJECTILE_SPEED = 12;
+const PROJECTILE_SPEED = 10;
 
 let cannonToggle = true;
 
