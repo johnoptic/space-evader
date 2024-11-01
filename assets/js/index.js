@@ -90,7 +90,7 @@ class Player {
 
 // Invader One Class
 class InvaderOne {
-    constructor() {
+    constructor({position}) {
 
         this.velocity = {
             x: 0,
@@ -104,8 +104,8 @@ class InvaderOne {
             this.width = 20;
             this.height = 20;
             this.position = {
-                x: canvas.width / 2, 
-                y: 20
+                x: position.x,
+                y: position.y
             };
         };
     }
@@ -139,7 +139,10 @@ class Grid {
         this.invaders = []
 
         for (let i = 0; i < 10; i++) {
-            this.invaders.push(new InvaderOne())
+            this.invaders.push(new InvaderOne({position: {
+                x: i * 80,
+                y: 0
+            }}))
         }
         
         console.log(this.invaders);
