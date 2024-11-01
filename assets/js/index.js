@@ -138,8 +138,11 @@ class Grid {
 
         this.invaders = []
 
-        for (let x = 0; x < 10; x++) {
-            for (let y = 0; y < 2; y++) {
+
+        const columns = Math.floor(Math.random() * 8 + 8)
+        const rows = Math.floor(Math.random() * 4 + 1)
+        for (let x = 0; x < columns; x++) {
+            for (let y = 0; y < rows; y++) {
             this.invaders.push(new InvaderOne({position: {
                 x: x * 80,
                 y: y * 80
