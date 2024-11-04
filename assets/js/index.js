@@ -1,8 +1,11 @@
 const canvas = document.querySelector('canvas');
 const c = canvas.getContext('2d');
+const fullscreenButton = document.getElementById("fullScreen");
+
 
 canvas.width = innerWidth;
 canvas.height = innerHeight;
+
 
 //-------------------------
 // Classes
@@ -26,7 +29,7 @@ class Player {
             this.rotation = 0;
             this.position = {
                 x: canvas.width / 2 - this.width / 2,
-                y: canvas.height / 2 - this.height / 2
+                y: canvas.height / 2 + (canvas.height / 2 - this.height / 2)
             };
         };
     }
@@ -206,8 +209,8 @@ const keys = {
     d: { pressed: false },
 };
 
-const MAX_SPEED = 4;
-const SPEED = 0.2;
+const MAX_SPEED = 8;
+const SPEED = 0.4;
 const REVERSE_SPEED = 0.05;
 const ROTATIONAL_SPEED = 0.05;
 const PROJECTILE_SPEED = 10;
@@ -227,16 +230,24 @@ addEventListener('keydown', (event) => {
 
     switch (event.key) {
         case 'w':
+        case 'ArrowUp':
             keys.w.pressed = true;
+            event.preventDefault();
             break;
         case 's':
+        case 'ArrowDown':
             keys.s.pressed = true;
+            event.preventDefault();
             break;
         case 'a':
+        case 'ArrowLeft':
             keys.a.pressed = true;
+            event.preventDefault();
             break;
         case 'd':
+        case 'ArrowRight':
             keys.d.pressed = true;
+            event.preventDefault();
             break;
         case ' ':
             if (player.image) {
@@ -272,15 +283,19 @@ addEventListener('keydown', (event) => {
 addEventListener('keyup', ({ key }) => {
     switch (key) {
         case 'w':
+        case 'ArrowUp':
             keys.w.pressed = false;
             break;
         case 's':
+        case 'ArrowDown':
             keys.s.pressed = false;
             break;
         case 'a':
+        case 'ArrowLeft':
             keys.a.pressed = false;
             break;
         case 'd':
+        case 'ArrowRight':
             keys.d.pressed = false;
             break;
     }
@@ -339,3 +354,35 @@ function animate() {
 animate();
 
 
+// Fullscreen functionality
+fullscreenButton.addEventListener("click", () => {
+    if (!document.fullscreenElement) {
+        // Enter fullscreen mode
+        if (canvas.requestFullscreen) {
+            canvas.requestFullscreen();
+        } else if (canvas.webkitRequestFullscreen) { // Safari
+            canvas.webkitRequestFullscreen();
+        } else if (canvas.msRequestFullscreen) { // IE11
+            canvas.msRequestFullscreen();
+        }
+    } else {
+        // Exit fullscreen mode
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) { // Safari
+            document.webkitExitFullscreen();
+        } else if (document.msExitFullscreen) { // IE11
+            document.msExitFullscreen();
+        }
+    }
+});
+
+// Resize canvas on fullscreen change
+function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+
+// Listen for resize events (for when entering/exiting fullscreen)
+window.addEventListener("resize", resizeCanvas);
+resizeCanvas();
