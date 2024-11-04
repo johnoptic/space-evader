@@ -127,6 +127,42 @@ class InvaderOne {
     }
 }
 
+// Invader Two Class
+class InvaderTwo {
+    constructor({position}) {
+
+        this.velocity = {
+            x: 0,
+            y: 0
+        };
+
+        const image = new Image();
+        image.src = '../assets/img/invader2.png';
+        image.onload = () => {
+            this.image = image;
+            this.width = 20;
+            this.height = 20;
+            this.position = {
+                x: position.x,
+                y: position.y
+            };
+        };
+    }
+
+    draw() {
+        c.drawImage(this.image, this.position.x - this.width / 2, this.position.y );
+    }
+
+    update({velocity}) {
+        if (this.image) {
+            this.draw();
+            this.position.x += velocity.x;
+            this.position.y += velocity.y;
+
+        }
+    }
+}
+
 class Grid {
     constructor() {
         this.position = {
@@ -147,15 +183,20 @@ class Grid {
 
         this.width = columns * 80
 
+        const InvaderClass = Math.random() > 0.5 ? InvaderOne : InvaderTwo;
+
         for (let x = 0; x < columns; x++) {
             for (let y = 0; y < rows; y++) {
-            this.invaders.push(new InvaderOne({position: {
-                x: x * 80,
-                y: y * 80
-            }}))
-        }}
-        
+                this.invaders.push(new InvaderClass({
+                    position: {
+                        x: x * 80,
+                        y: y * 80
+                    }
+                }));
+            }
+        }
     }
+        
 
     update() {
         this.position.x += this.velocity.x
@@ -316,7 +357,7 @@ addEventListener('keyup', ({ key }) => {
 //-------------------------
 
 let frames = 0
-let randomInterval = Math.floor((Math.random() * 1200) + 400);
+let randomInterval = Math.floor((Math.random() * 400) + 1200);
 
 function animate() {
     requestAnimationFrame(animate);
@@ -366,7 +407,7 @@ function animate() {
     // Spawning Invaders
     if (frames % randomInterval === 0) {
         grids.push(new Grid())
-        randomInterval = Math.floor((Math.random() * 1200) + 400)
+        randomInterval = Math.floor((Math.random() * 400) + 1200)
         frames = 0
     }
 
