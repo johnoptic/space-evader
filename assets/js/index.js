@@ -135,15 +135,15 @@ class Grid {
         }
 
         this.velocity = {
-            x: 3,
+            x: 4,
             y: 0
         }
 
         this.invaders = []
 
 
-        const columns = Math.floor(Math.random() * 8 + 8)
-        const rows = Math.floor(Math.random() * 4 + 1)
+        const columns = Math.floor(Math.random() * 4 + 8)
+        const rows = Math.floor(Math.random() * 3 + 1)
 
         this.width = columns * 80
 
@@ -161,8 +161,11 @@ class Grid {
         this.position.x += this.velocity.x
         this.position.y += this.velocity.y
 
+        this.velocity.y = 0
+
         if (this.position.x +this.width >= canvas.width || this.position.x <= 0) {
             this.velocity.x = -this.velocity.x
+            this.velocity.y = 80
         }
     }
 }
@@ -207,7 +210,7 @@ class Projectile {
 // Instantiate Player Object
 const player = new Player();
 
-const grids = [new Grid()]
+const grids = []
 
 const keys = {
     w: { pressed: false },
@@ -312,6 +315,9 @@ addEventListener('keyup', ({ key }) => {
 // Functions
 //-------------------------
 
+let frames = 0
+let randomInterval = Math.floor((Math.random() * 1200) + 400);
+
 function animate() {
     requestAnimationFrame(animate);
     c.fillStyle = 'black';
@@ -355,6 +361,16 @@ function animate() {
     // Rotate
     if (keys.d.pressed) player.rotation += ROTATIONAL_SPEED;
     if (keys.a.pressed) player.rotation -= ROTATIONAL_SPEED;
+
+    console.log(randomInterval)
+    // Spawning Invaders
+    if (frames % randomInterval === 0) {
+        grids.push(new Grid())
+        randomInterval = Math.floor((Math.random() * 1200) + 400)
+        frames = 0
+    }
+
+    frames++
 }
 
 // Call Animation Loop
