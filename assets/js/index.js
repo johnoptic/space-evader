@@ -117,11 +117,11 @@ class InvaderOne {
         c.drawImage(this.image, this.position.x - this.width / 2, this.position.y );
     }
 
-    update() {
+    update({velocity}) {
         if (this.image) {
             this.draw();
-            this.position.x += this.velocity.x;
-            this.position.y += this.velocity.y;
+            this.position.x += velocity.x;
+            this.position.y += velocity.y;
 
         }
     }
@@ -135,7 +135,7 @@ class Grid {
         }
 
         this.velocity = {
-            x: 0,
+            x: 3,
             y: 0
         }
 
@@ -144,6 +144,9 @@ class Grid {
 
         const columns = Math.floor(Math.random() * 8 + 8)
         const rows = Math.floor(Math.random() * 4 + 1)
+
+        this.width = columns * 80
+
         for (let x = 0; x < columns; x++) {
             for (let y = 0; y < rows; y++) {
             this.invaders.push(new InvaderOne({position: {
@@ -152,11 +155,15 @@ class Grid {
             }}))
         }}
         
-        console.log(this.invaders);
     }
 
     update() {
+        this.position.x += this.velocity.x
+        this.position.y += this.velocity.y
 
+        if (this.position.x +this.width >= canvas.width || this.position.x <= 0) {
+            this.velocity.x = -this.velocity.x
+        }
     }
 }
 
@@ -325,7 +332,7 @@ function animate() {
     grids.forEach(grid => {
         grid.update();
         grid.invaders.forEach((invader) => {
-            invader.update()
+            invader.update({velocity: grid.velocity})
         })
     })
 
