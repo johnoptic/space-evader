@@ -104,8 +104,8 @@ class InvaderOne {
         image.src = '../assets/img/invader1.png';
         image.onload = () => {
             this.image = image;
-            this.width = 20;
-            this.height = 20;
+            this.width = 70;
+            this.height = 70;
             this.position = {
                 x: position.x,
                 y: position.y
@@ -140,8 +140,8 @@ class InvaderTwo {
         image.src = '../assets/img/invader2.png';
         image.onload = () => {
             this.image = image;
-            this.width = 20;
-            this.height = 20;
+            this.width = 70;
+            this.height = 70;
             this.position = {
                 x: position.x,
                 y: position.y
@@ -261,10 +261,10 @@ const keys = {
 };
 
 const MAX_SPEED = 8;
-const SPEED = 0.4;
+const SPEED = 0.2;
 const REVERSE_SPEED = 0.05;
 const ROTATIONAL_SPEED = 0.05;
-const PROJECTILE_SPEED = 10;
+const PROJECTILE_SPEED = 12;
 
 let cannonToggle = true;
 
@@ -374,14 +374,30 @@ function animate() {
             projectiles.splice(i, 1);
         }
     }
-    console.log(projectiles.length)
 
     grids.forEach(grid => {
         grid.update();
-        grid.invaders.forEach((invader) => {
-            invader.update({velocity: grid.velocity})
-        })
-    })
+        grid.invaders.forEach((invader, i) => {
+            invader.update({ velocity: grid.velocity });
+    
+            projectiles.forEach((projectile, j) => {
+                // Check if the projectile is within the invader's bounds
+                if (
+                    projectile.position.x >= invader.position.x &&
+                    projectile.position.x <= invader.position.x + invader.width &&
+                    projectile.position.y >= invader.position.y &&
+                    projectile.position.y <= invader.position.y + invader.height
+                ) {
+                    // Remove invader and projectile on collision
+                    setTimeout(() => {
+                        grid.invaders.splice(i, 1); // Remove invader
+                        projectiles.splice(j, 1);   // Remove projectile
+                    }, 0);
+                }
+            });
+        });
+    });
+    
 
     // Acceleration
     if (keys.w.pressed) {
