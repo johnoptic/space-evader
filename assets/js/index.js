@@ -392,6 +392,14 @@ function animate() {
                     setTimeout(() => {
                         grid.invaders.splice(i, 1); // Remove invader
                         projectiles.splice(j, 1);   // Remove projectile
+
+                        if (grid.invaders.length > 0) {
+                            const firstInvader = grid.invaders[0]
+                            const lastInvader = grid.invaders[grid.invaders.length -1]
+
+                            grid.width = lastInvader.position.x - firstInvader.position.x
+                            
+                        }
                     }, 0);
                 }
             });
