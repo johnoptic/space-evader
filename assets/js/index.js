@@ -426,9 +426,36 @@ function animate() {
     c.fillRect(0, 0, canvas.width, canvas.height);
     player.update();
 
-    invaderProjectiles.forEach(invaderProjectile => {
-        invaderProjectile.update()        
-    })
+    invaderProjectiles.forEach((invaderProjectile, index) => {
+        // Check if the projectile is off-screen
+        if (invaderProjectile.isOffScreen()) {
+            invaderProjectiles.splice(index, 1);
+        } else {
+            invaderProjectile.update();
+    
+            // Collision detection between player and invaderProjectile
+            const playerLeft = player.position.x;
+            const playerRight = player.position.x + player.width;
+            const playerTop = player.position.y;
+            const playerBottom = player.position.y + player.height;
+    
+            const projectileLeft = invaderProjectile.position.x - invaderProjectile.radius;
+            const projectileRight = invaderProjectile.position.x + invaderProjectile.radius;
+            const projectileTop = invaderProjectile.position.y - invaderProjectile.radius;
+            const projectileBottom = invaderProjectile.position.y + invaderProjectile.radius;
+    
+            if (
+                projectileRight > playerLeft &&
+                projectileLeft < playerRight &&
+                projectileBottom > playerTop &&
+                projectileTop < playerBottom
+            ) {
+                console.log("Player has been hit");
+                invaderProjectiles.splice(index, 1); // Remove projectile after collision
+            }
+        }
+    });
+    
 
     for (let i = projectiles.length - 1; i >= 0; i--) {
         const projectile = projectiles[i]
@@ -500,7 +527,6 @@ function animate() {
     if (keys.d.pressed) player.rotation += ROTATIONAL_SPEED;
     if (keys.a.pressed) player.rotation -= ROTATIONAL_SPEED;
 
-    console.log(randomInterval)
     // Spawning Invaders
     if (frames % randomInterval === 0) {
         grids.push(new Grid())
