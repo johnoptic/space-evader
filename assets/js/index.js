@@ -194,6 +194,7 @@ class Grid {
         this.position = {
             x: 0,
             y: 0
+
         }
 
         this.velocity = {
@@ -435,7 +436,7 @@ function animate() {
     
             // Collision detection between player and invaderProjectile
             const playerLeft = player.position.x;
-            const playerRight = player.position.x + player.width;
+            const playerRight = player.position.x + player.width -40;
             const playerTop = player.position.y;
             const playerBottom = player.position.y + player.height;
     
@@ -469,6 +470,11 @@ function animate() {
 
     grids.forEach((grid, gridIndex) => {
         grid.update();
+
+    // Check if the grid has moved off the screen
+    if (grid.position.y > canvas.height + 320) {
+        grids.splice(gridIndex, 1); // Remove the grid from the array
+    }
 
     // Spawn Projectiles
     if (frames % 100 === 0 && grid.invaders.length > 0) {
