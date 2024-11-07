@@ -193,14 +193,14 @@ class Grid {
     constructor() {
         this.position = {
             x: 0,
-            y: 0
+            y: -240
 
-        }
+        };
 
         this.velocity = {
             x: 4,
             y: 0
-        }
+        };
 
         this.invaders = []
 
@@ -217,7 +217,7 @@ class Grid {
                 this.invaders.push(new InvaderClass({
                     position: {
                         x: x * 80,
-                        y: y * 80
+                        y: this.position.y + y * 80
                     }
                 }));
             }
