@@ -37,16 +37,38 @@ class Player {
     }
 
     draw() {
-        c.save()
+        c.save();
+    
+        // Position the glow at the engine (bottom of the spaceship)
+        if (keys.w.pressed || keys.s.pressed) {
+            c.save();
+            const engineX = this.position.x + this.width / 2;
+            const engineY = this.position.y + this.height;
+    
+            // Set the glow color based on which key is pressed
+            c.shadowColor = keys.w.pressed ? 'orange' : 'blue'; // Orange for 'w' key, blue for 's' key
+            c.shadowBlur = 15;
+    
+            // Draw a glowing circle at the engine position
+            c.beginPath();
+            c.arc(engineX, engineY, 6, 0, Math.PI * 2); // Adjust size and position as needed
+            c.fillStyle = keys.w.pressed ? 'orange' : 'blue';
+            c.fill();
+            c.closePath();
+            c.restore();
+        }
+    
+        // Draw the spaceship image
         c.translate(
-            player.position.x + player.width / 2,
-            player.position.y + player.height /2
-        )
-        c.rotate(this.rotation)
+            this.position.x + this.width / 2,
+            this.position.y + this.height / 2
+        );
+        c.rotate(this.rotation);
         c.translate(
-            -player.position.x - player.width / 2,
-            -player.position.y - player.height /2
-        )
+            -this.position.x - this.width / 2,
+            -this.position.y - this.height / 2
+        );
+    
         c.drawImage(
             this.image,
             this.position.x,
@@ -54,8 +76,11 @@ class Player {
             this.width,
             this.height
         );
-        c.restore()
+    
+        c.restore();
     }
+    
+    
 
     update() {
         if (this.image) {
@@ -424,9 +449,11 @@ function animate() {
 
     // Player Movement along y-axis
     if (keys.w.pressed) {
-        player.velocity.y -= acceleration; // Accelerate up
+        player.velocity.y -= acceleration;
+        player.rotation = 0;
     } else if (keys.s.pressed) {
-        player.velocity.y += acceleration; // Accelerate down
+        player.velocity.y += acceleration;
+        player.rotation = 0;
     }
 
     // Apply friction to gradually slow down the player
@@ -494,7 +521,7 @@ function animate() {
     }
 
     // Spawn Projectiles
-    if (frames % 100 === 0 && grid.invaders.length > 0) {
+    if (frames % 60 === 0 && grid.invaders.length > 0) {
         grid.invaders[Math.floor(Math.random() * grid.invaders.length)].shoot(invaderProjectiles)
     }
 
