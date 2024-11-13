@@ -341,32 +341,34 @@ addEventListener('keydown', (event) => {
         case ' ':
             if (player.image) {
                 
-                const cannonOffset = 20; // Distance from the center to the cannons
-                const forwardOffset = 50; // How far forward the cannon positions should be from the ship's center
+                const cannonOffset = 20;
                 
                 // Calculate positions for left and right cannons
+                const centerX = player.position.x + player.width / 2;
+                const centerY = player.position.y;
                 
-                const leftCannonX = player.position.x + Math.cos(player.rotation) * forwardOffset - Math.sin(player.rotation) * cannonOffset;
-                const leftCannonY = player.position.y + Math.sin(player.rotation) * forwardOffset + Math.cos(player.rotation) * cannonOffset;
+                const leftCannonX = centerX - cannonOffset;
+                const leftCannonY = centerY;
                 
-                const rightCannonX = player.position.x + Math.cos(player.rotation) * forwardOffset + Math.sin(player.rotation) * cannonOffset;
-                const rightCannonY = player.position.y + Math.sin(player.rotation) * forwardOffset - Math.cos(player.rotation) * cannonOffset;
+                const rightCannonX = centerX + cannonOffset;
+                const rightCannonY = centerY;
                 
-
+                // Use the toggle to switch between the two cannon positions
+                const position = cannonToggle
+                    ? { x: leftCannonX, y: leftCannonY }
+                    : { x: rightCannonX, y: rightCannonY };
                 
-                const position = cannonToggle ? { x: leftCannonX, y: leftCannonY } : { x: rightCannonX, y: rightCannonY };
-
-
                 projectiles.push(new Projectile({
                     position: position,
                     velocity: {
-                        x: Math.cos(player.rotation) * PROJECTILE_SPEED,
-                        y: Math.sin(player.rotation) * PROJECTILE_SPEED,
-                    },
-                }));
-
-                cannonToggle = !cannonToggle; // Toggle between cannons
-            }
+                        x: 0,
+                        y: -PROJECTILE_SPEED,
+                    }
+                })
+            );
+                
+            cannonToggle = !cannonToggle; // Toggle between cannons
+        }
             break;
     }
 });
