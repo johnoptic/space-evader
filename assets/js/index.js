@@ -14,82 +14,38 @@ canvas.height = innerHeight;
 // Player Class
 class Player {
     constructor() {
-
         this.velocity = {
             x: 0,
             y: 0
         };
 
         const image = new Image();
-        image.src = '../assets/img/player.png';
+        image.src = './assets/img/playerOne.png';
         image.onload = () => {
+            const scale = 0.25;
             this.image = image;
-            this.width = 100;
-            this.height = 100;
-            this.rotation = 0;
+            this.width = image.width * scale;
+            this.height = image.height * scale;
+
             this.position = {
                 x: canvas.width / 2 - this.width / 2,
-                y: canvas.height / 2 + (canvas.height / 2 - this.height / 2)
+                y: canvas.height / 2 - this.height / 2
             };
         };
     }
 
     draw() {
-        c.save();
-        c.translate(this.position.x, this.position.y);
-        c.rotate(this.rotation);
-        c.drawImage(this.image, -this.width / 2, -this.height / 2, this.width, this.height);
-        c.restore();
-    }
-
-    drawGlow() {
-        c.save();
-        c.translate(this.position.x, this.position.y);
-        c.rotate(this.rotation);
-        
-        // Draw the glowing effect if W is pressed
-        if (keys.w.pressed) {
-            c.beginPath();
-            c.arc(-this.width / 2, this.height / 2 - 50, 10, 0, Math.PI * 2); 
-            c.fillStyle = 'rgba(255, 165, 0, 0.5'; // Orange color with some transparency
-            c.fill();
-            c.closePath();
-        }
-
-        c.drawImage(this.image, -this.width / 2, -this.height / 2, this.width, this.height);
-        c.restore();
+        c.drawImage(this.image, this.position.x, this.position.y, this.width, this.height);
     }
 
     update() {
         if (this.image) {
-            this.drawGlow();
             this.draw();
             this.position.x += this.velocity.x;
-            this.position.y += this.velocity.y;
-
-            // Implement friction to x and y velocity
-            this.velocity.x *= 0.999; 
-            this.velocity.y *= 0.999; 
-
-            // Keep player in bounds and implement bouncing behavior
-            if (this.position.x < 0) {
-                this.position.x = 0;
-                this.velocity.x = -this.velocity.x / 2; // Bounce back and lose half velocity
-            } else if (this.position.x > canvas.width) {
-                this.position.x = canvas.width;
-                this.velocity.x = -this.velocity.x / 2; // Bounce back and lose half velocity
-            }
-
-            if (this.position.y < 0) {
-                this.position.y = 0;
-                this.velocity.y = -this.velocity.y / 2; // Bounce back and lose half velocity
-            } else if (this.position.y > canvas.height) {
-                this.position.y = canvas.height;
-                this.velocity.y = -this.velocity.y / 2; // Bounce back and lose half velocity
-            }
         }
     }
 }
+
 
 // Invader One Class
 class InvaderOne {
@@ -325,10 +281,10 @@ const keys = {
 const MAX_SPEED = 8;
 const SPEED = 0.2;
 const REVERSE_SPEED = 0.05;
-const ROTATIONAL_SPEED = 0.05;
+
 const PROJECTILE_SPEED = 12;
 
-let cannonToggle = true;
+// let cannonToggle = true;
 
 
 
@@ -364,11 +320,12 @@ addEventListener('keydown', (event) => {
             break;
         case ' ':
             if (player.image) {
-                
+                /*
                 const cannonOffset = 20; // Distance from the center to the cannons
                 const forwardOffset = 50; // How far forward the cannon positions should be from the ship's center
                 
                 // Calculate positions for left and right cannons
+                
                 const leftCannonX = player.position.x + Math.cos(player.rotation) * forwardOffset - Math.sin(player.rotation) * cannonOffset;
                 const leftCannonY = player.position.y + Math.sin(player.rotation) * forwardOffset + Math.cos(player.rotation) * cannonOffset;
                 
@@ -378,6 +335,8 @@ addEventListener('keydown', (event) => {
 
                 
                 const position = cannonToggle ? { x: leftCannonX, y: leftCannonY } : { x: rightCannonX, y: rightCannonY };
+
+                */
 
                 projectiles.push(new Projectile({
                     position: position,
@@ -425,7 +384,7 @@ function animate() {
     requestAnimationFrame(animate);
     c.fillStyle = 'black';
     c.fillRect(0, 0, canvas.width, canvas.height);
-    player.update();
+    player.update()
 
     invaderProjectiles.forEach((invaderProjectile, index) => {
         // Check if the projectile is off-screen
@@ -436,7 +395,7 @@ function animate() {
     
             // Collision detection between player and invaderProjectile
             const playerLeft = player.position.x;
-            const playerRight = player.position.x + player.width -40;
+            const playerRight = player.position.x + player.width;
             const playerTop = player.position.y;
             const playerBottom = player.position.y + player.height;
     
@@ -512,26 +471,6 @@ function animate() {
         });
     });
     
-
-    // Acceleration
-    if (keys.w.pressed) {
-        player.velocity.x += Math.cos(player.rotation) * SPEED; 
-        player.velocity.y += Math.sin(player.rotation) * SPEED; 
-    }
-    // Small reverse thrust
-    if (keys.s.pressed) {
-        player.velocity.x -= Math.cos(player.rotation) * REVERSE_SPEED; 
-        player.velocity.y -= Math.sin(player.rotation) * REVERSE_SPEED; 
-    }
-    // Clamp the player's velocity
-    const speed = Math.sqrt(player.velocity.x ** 2 + player.velocity.y ** 2);
-    if (speed > MAX_SPEED) {
-        player.velocity.x = (player.velocity.x / speed) * MAX_SPEED;
-        player.velocity.y = (player.velocity.y / speed) * MAX_SPEED;
-    }
-    // Rotate
-    if (keys.d.pressed) player.rotation += ROTATIONAL_SPEED;
-    if (keys.a.pressed) player.rotation -= ROTATIONAL_SPEED;
 
     // Spawning Invaders
     if (frames % randomInterval === 0) {
