@@ -61,6 +61,7 @@ class Player {
         if (this.image) {
             this.draw();
             this.position.x += this.velocity.x;
+            this.position.y += this.velocity.y;
         }
     }
 }
@@ -405,16 +406,25 @@ function animate() {
     c.fillRect(0, 0, canvas.width, canvas.height);
     player.update()
 
-    // Player Movement
-    if (keys.a.pressed && player.position.x >= 0) {
-        player.velocity.x = -7
-        player.rotation = -.15
-    } else if (keys.d.pressed && player.position.x + player.width <= canvas.width) {
-        player.velocity.x = 7
-        player.rotation = .15
+    // Player Movement along x-axis
+    if (keys.a.pressed && player.position.x > 0) {
+        player.velocity.x = -7;
+        player.rotation = -0.15;
+    } else if (keys.d.pressed && player.position.x + player.width < canvas.width) {
+        player.velocity.x = 7;
+        player.rotation = 0.15;
     } else {
-        player.velocity.x = 0
-        player.rotation = 0
+        player.velocity.x = 0;
+        player.rotation = 0;
+    }
+
+    // Player Movement along y-axis
+    if (keys.w.pressed && player.position.y > 0) {
+        player.velocity.y = -7;
+    } else if (keys.s.pressed && player.position.y + player.height < canvas.height) {
+        player.velocity.y = 7;
+    } else {
+        player.velocity.y = 0;
     }
 
     invaderProjectiles.forEach((invaderProjectile, index) => {
