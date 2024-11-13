@@ -304,7 +304,7 @@ const REVERSE_SPEED = 0.05;
 
 const PROJECTILE_SPEED = 12;
 
-// let cannonToggle = true;
+let cannonToggle = true;
 
 
 
@@ -340,7 +340,7 @@ addEventListener('keydown', (event) => {
             break;
         case ' ':
             if (player.image) {
-                /*
+                
                 const cannonOffset = 20; // Distance from the center to the cannons
                 const forwardOffset = 50; // How far forward the cannon positions should be from the ship's center
                 
@@ -356,7 +356,6 @@ addEventListener('keydown', (event) => {
                 
                 const position = cannonToggle ? { x: leftCannonX, y: leftCannonY } : { x: rightCannonX, y: rightCannonY };
 
-                */
 
                 projectiles.push(new Projectile({
                     position: position,
@@ -406,26 +405,42 @@ function animate() {
     c.fillRect(0, 0, canvas.width, canvas.height);
     player.update()
 
+    // Player acceleration properties
+    const acceleration = 0.2;
+    const friction = 0.98; // Friction to gradually reduce speed
+
     // Player Movement along x-axis
-    if (keys.a.pressed && player.position.x > 0) {
-        player.velocity.x = -7;
+    if (keys.a.pressed) {
+        player.velocity.x -= acceleration;
         player.rotation = -0.15;
-    } else if (keys.d.pressed && player.position.x + player.width < canvas.width) {
-        player.velocity.x = 7;
+    } else if (keys.d.pressed) {
+        player.velocity.x += acceleration;
         player.rotation = 0.15;
     } else {
-        player.velocity.x = 0;
         player.rotation = 0;
     }
 
     // Player Movement along y-axis
-    if (keys.w.pressed && player.position.y > 0) {
-        player.velocity.y = -7;
-    } else if (keys.s.pressed && player.position.y + player.height < canvas.height) {
-        player.velocity.y = 7;
-    } else {
-        player.velocity.y = 0;
+    if (keys.w.pressed) {
+        player.velocity.y -= acceleration; // Accelerate up
+    } else if (keys.s.pressed) {
+        player.velocity.y += acceleration; // Accelerate down
     }
+
+    // Apply friction to gradually slow down the player
+    player.velocity.x *= friction;
+    player.velocity.y *= friction;
+
+    // Update player position
+    player.position.x += player.velocity.x;
+    player.position.y += player.velocity.y;
+
+    // Keep player within canvas bounds
+    if (player.position.x < 0) player.position.x = 0;
+    if (player.position.x + player.width > canvas.width) player.position.x = canvas.width - player.width;
+    if (player.position.y < 0) player.position.y = 0;
+    if (player.position.y + player.height > canvas.height) player.position.y = canvas.height - player.height;
+
 
     invaderProjectiles.forEach((invaderProjectile, index) => {
         // Check if the projectile is off-screen
