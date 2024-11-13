@@ -22,7 +22,7 @@ class Player {
         this.rotation = 0
 
         const image = new Image();
-        image.src = './assets/img/playerOne.png';
+        image.src = './assets/img/player.png';
         image.onload = () => {
             const scale = 0.25;
             this.image = image;
