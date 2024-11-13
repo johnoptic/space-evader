@@ -19,6 +19,8 @@ class Player {
             y: 0
         };
 
+        this.rotation = 0
+
         const image = new Image();
         image.src = './assets/img/playerOne.png';
         image.onload = () => {
@@ -35,7 +37,24 @@ class Player {
     }
 
     draw() {
-        c.drawImage(this.image, this.position.x, this.position.y, this.width, this.height);
+        c.save()
+        c.translate(
+            player.position.x + player.width / 2,
+            player.position.y + player.height /2
+        )
+        c.rotate(this.rotation)
+        c.translate(
+            -player.position.x - player.width / 2,
+            -player.position.y - player.height /2
+        )
+        c.drawImage(
+            this.image,
+            this.position.x,
+            this.position.y,
+            this.width,
+            this.height
+        );
+        c.restore()
     }
 
     update() {
@@ -385,6 +404,18 @@ function animate() {
     c.fillStyle = 'black';
     c.fillRect(0, 0, canvas.width, canvas.height);
     player.update()
+
+    // Player Movement
+    if (keys.a.pressed && player.position.x >= 0) {
+        player.velocity.x = -7
+        player.rotation = -.15
+    } else if (keys.d.pressed && player.position.x + player.width <= canvas.width) {
+        player.velocity.x = 7
+        player.rotation = .15
+    } else {
+        player.velocity.x = 0
+        player.rotation = 0
+    }
 
     invaderProjectiles.forEach((invaderProjectile, index) => {
         // Check if the projectile is off-screen
