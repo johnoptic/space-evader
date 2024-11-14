@@ -301,27 +301,32 @@ class InvaderProjectile {
     }
 }
 
-// Projectile Class
+// Particle Class
 class Particle {
     constructor({position, velocity, radius, color}) {
         this.position = position
         this.velocity = velocity
         this.radius = radius
         this.color = color
+        this.opacity = 1
     }
 
     draw() {
+        c.save()
+        c.globalAlpha = this.opacity
         c.beginPath()
         c.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2, false)
         c.closePath()
         c.fillStyle = this.color;
         c.fill()
+        c.restore()
     }
 
     update() {
         this.draw()
         this.position.x += this.velocity.x
         this.position.y += this.velocity.y
+        this.opacity -= 0.01
     }
     isOffScreen() {
         return (
@@ -463,8 +468,15 @@ function animate() {
     c.fillStyle = 'black';
     c.fillRect(0, 0, canvas.width, canvas.height);
     player.update()
-    particles.forEach(particle => {
-        particle.update()
+    particles.forEach((particle, i) => {
+        if (particle.opacity <= 0) {
+            setTimeout(() => {
+                particles.splice(i, 1)
+            }, 0)
+        } else {
+            particle.update()
+        }
+
     })
 
 
@@ -580,11 +592,11 @@ function animate() {
                             y: invader.position.y + invader.height / 2
                         },
                         velocity: {
-                            x: (Math.random() - 0.5) * 2,
-                            y: (Math.random() - 0.5) * 2
+                            x: (Math.random() - 0.5) * 3,
+                            y: (Math.random() - 0.5) * 3
                         },
-                        radius: Math.random() * 3,
-                        color: 'red'
+                        radius: Math.random() * 5,
+                        color: 'green'
                     }))
                 }
 
@@ -621,10 +633,6 @@ function animate() {
     frames++
 }
 
-// Call Animation Loop
-animate();
-
-
 // Fullscreen functionality
 fullscreenButton.addEventListener("click", () => {
     if (!document.fullscreenElement) {
@@ -657,3 +665,12 @@ function resizeCanvas() {
 // Listen for resize events (for when entering/exiting fullscreen)
 window.addEventListener("resize", resizeCanvas);
 resizeCanvas();
+
+//
+// Debugging
+//
+
+console.log(fullscreenButton);
+
+// Call Animation Loop
+animate();
