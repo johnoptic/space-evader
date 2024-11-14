@@ -303,12 +303,13 @@ class InvaderProjectile {
 
 // Particle Class
 class Particle {
-    constructor({position, velocity, radius, color}) {
+    constructor({position, velocity, radius, color, fades}) {
         this.position = position
         this.velocity = velocity
         this.radius = radius
         this.color = color
         this.opacity = 1
+        this.fades = fades
     }
 
     draw() {
@@ -326,7 +327,10 @@ class Particle {
         this.draw()
         this.position.x += this.velocity.x
         this.position.y += this.velocity.y
-        this.opacity -= 0.01
+        if (this.fades) {
+            this.opacity -= 0.01
+        }
+
     }
     isOffScreen() {
         return (
@@ -463,12 +467,53 @@ addEventListener('keyup', ({ key }) => {
 let frames = 0
 let randomInterval = Math.floor((Math.random() * 400) + 1200);
 
+// Background Stars
+for (let i = 0; i < 150; i++) {
+    particles.push(new Particle({
+        position: {
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height
+        },
+        velocity: {
+            x: 0,
+            y: 2
+        },
+        radius: Math.random() * 2,
+        color: 'white'
+    }))
+}
+
+
+function createParticles({ object, color, fades }) {
+    for (let i = 0; i < 15; i++) {
+        particles.push(new Particle({
+            position: {
+                x: object.position.x + object.width / 2,
+                y: object.position.y + object.height / 2
+            },
+            velocity: {
+                x: (Math.random() - 0.5) * 3,
+                y: (Math.random() - 0.5) * 3
+            },
+            radius: Math.random() * 5,
+            color: color || 'yellow',
+            fades
+        }))
+    }
+}
+
 function animate() {
     requestAnimationFrame(animate);
     c.fillStyle = 'black';
     c.fillRect(0, 0, canvas.width, canvas.height);
-    player.update()
+
     particles.forEach((particle, i) => {
+
+        if (particle.position.y - particle.radius >= canvas.height) {
+            particle.position.x = Math.random() * canvas.width
+            particle.position.y = -particle.radius
+        }
+
         if (particle.opacity <= 0) {
             setTimeout(() => {
                 particles.splice(i, 1)
@@ -544,6 +589,10 @@ function animate() {
                 projectileTop < playerBottom
             ) {
                 console.log("Player has been hit");
+                createParticles({
+                    object: player,
+                    fades: true
+                })
                 invaderProjectiles.splice(index, 1); // Remove projectile after collision
             }
         }
@@ -585,20 +634,10 @@ function animate() {
                     projectile.position.y <= invader.position.y + invader.height
                 ) {
 
-                    for (let i = 0; i < 15; i++) {
-                    particles.push(new Particle({
-                        position: {
-                            x: invader.position.x + invader.width / 2,
-                            y: invader.position.y + invader.height / 2
-                        },
-                        velocity: {
-                            x: (Math.random() - 0.5) * 3,
-                            y: (Math.random() - 0.5) * 3
-                        },
-                        radius: Math.random() * 5,
-                        color: 'green'
-                    }))
-                }
+                    createParticles({
+                        object: invader,
+                        fades: true
+                    })
 
                     // Remove invader and projectile on collision
                     setTimeout(() => {
@@ -628,7 +667,7 @@ function animate() {
         frames = 0
     }
 
-
+    player.update()
 
     frames++
 }
