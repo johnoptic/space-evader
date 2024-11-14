@@ -301,6 +301,37 @@ class InvaderProjectile {
     }
 }
 
+// Projectile Class
+class Particle {
+    constructor({position, velocity, radius, color}) {
+        this.position = position
+        this.velocity = velocity
+        this.radius = radius
+        this.color = color
+    }
+
+    draw() {
+        c.beginPath()
+        c.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2, false)
+        c.closePath()
+        c.fillStyle = 'white'
+        c.fill()
+    }
+
+    update() {
+        this.draw()
+        this.position.x += this.velocity.x
+        this.position.y += this.velocity.y
+    }
+    isOffScreen() {
+        return (
+            this.position.x < 0 ||
+            this.position.x > canvas.width ||
+            this.position.y < 0 ||
+            this.position.y > canvas.height
+        );
+    }
+}
 
 //-------------------------
 // Globals
@@ -315,6 +346,7 @@ const projectiles = [];
 
 const invaderProjectiles = []
 
+const particles = []
 
 const keys = {
     w: { pressed: false },
@@ -431,6 +463,10 @@ function animate() {
     c.fillStyle = 'black';
     c.fillRect(0, 0, canvas.width, canvas.height);
     player.update()
+    particles.forEach(particle => {
+        particle.update()
+    })
+
 
     // Player acceleration properties
     const acceleration = 0.2;
@@ -536,6 +572,19 @@ function animate() {
                     projectile.position.y >= invader.position.y &&
                     projectile.position.y <= invader.position.y + invader.height
                 ) {
+
+                    particles.push(new Particle({
+                        position: {
+                            x: invader.position.x + invader.width / 2,
+                            y: invader.position.y + invader.height / 2
+                        },
+                        velocity: {
+                            x: 2,
+                            y: 2
+                        },
+                        radius: 10,
+                        color: 'yellow'
+                    }))
                     // Remove invader and projectile on collision
                     setTimeout(() => {
                         grid.invaders.splice(i, 1); // Remove invader
