@@ -314,7 +314,7 @@ class Particle {
         c.beginPath()
         c.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2, false)
         c.closePath()
-        c.fillStyle = 'white'
+        c.fillStyle = this.color;
         c.fill()
     }
 
@@ -573,18 +573,21 @@ function animate() {
                     projectile.position.y <= invader.position.y + invader.height
                 ) {
 
+                    for (let i = 0; i < 15; i++) {
                     particles.push(new Particle({
                         position: {
                             x: invader.position.x + invader.width / 2,
                             y: invader.position.y + invader.height / 2
                         },
                         velocity: {
-                            x: 2,
-                            y: 2
+                            x: (Math.random() - 0.5) * 2,
+                            y: (Math.random() - 0.5) * 2
                         },
-                        radius: 10,
-                        color: 'yellow'
+                        radius: Math.random() * 3,
+                        color: 'red'
                     }))
+                }
+
                     // Remove invader and projectile on collision
                     setTimeout(() => {
                         grid.invaders.splice(i, 1); // Remove invader
