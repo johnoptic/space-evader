@@ -135,7 +135,7 @@ class InvaderOne {
             },
             velocity: {
                 x: 0,
-                y: 5
+                y: 12
             }
         }))
     }
@@ -184,7 +184,7 @@ class InvaderTwo {
             },
             velocity: {
                 x: 0,
-                y: 5
+                y: 10
             }
         }))
     }
@@ -244,7 +244,7 @@ class Projectile {
     constructor({position, velocity}) {
         this.position = position
         this.velocity = velocity
-        this.radius = 5
+        this.radius = 6
     }
 
     draw() {
@@ -275,7 +275,7 @@ class InvaderProjectile {
     constructor({position, velocity}) {
         this.position = position
         this.velocity = velocity
-        this.radius = 4
+        this.radius = 5
     }
 
     draw() {
@@ -368,7 +368,7 @@ const MAX_SPEED = 8;
 const SPEED = 0.2;
 const REVERSE_SPEED = 0.05;
 
-const PROJECTILE_SPEED = 12;
+const PROJECTILE_SPEED = 16;
 
 let cannonToggle = true;
 
@@ -526,7 +526,7 @@ function animate() {
 
 
     // Player acceleration properties
-    const acceleration = 0.2;
+    const acceleration = 0.1;
     const friction = 0.98; // Friction to gradually reduce speed
 
     // Player Movement along x-axis
